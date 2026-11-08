@@ -1,0 +1,8 @@
+/* Fixed decorative brand references. Semantic component roles remain theme-resolved. */
+[data-om-theme-root] {
+  --brand-rgb-blue: #1790dd;
+  --brand-rgb-sky: #90d7fd;
+  --brand-rgb-yellow: #fdef6d;
+  --brand-rgb-ink: #000000;
+  --brand-rgb-paper: #ffffff;
+}

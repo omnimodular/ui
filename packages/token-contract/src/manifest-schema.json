@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omni-ui.dev/schemas/theme-manifest-1.json",
+  "title": "Omni UI theme plugin manifest",
+  "type": "object",
+  "required": ["id", "name", "version", "contractVersion", "modes"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
+    "name": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" },
+    "contractVersion": { "type": "string", "const": "1.0.0" },
+    "modes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "enum": ["light", "dark"] }
+    }
+  },
+  "description": "Runtime manifests additionally require load(): Promise<ThemeDefinition>; functions cannot be represented in JSON."
+}

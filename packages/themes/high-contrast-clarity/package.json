@@ -1,0 +1,8 @@
+{
+  "name": "@omni-ui/theme-high-contrast-clarity",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": { "@omni-ui/token-contract": "1.0.0", "@omni-ui/brand-rgb": "1.0.0" },
+  "exports": { ".": "./src/index.ts", "./tokens": "./src/tokens.ts" },
+  "license": "MIT"
+}

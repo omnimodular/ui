@@ -1,0 +1,13 @@
+{
+  "name": "@omni-ui/components",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@omni-ui/core": "1.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "license": "MIT"
+}

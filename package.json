@@ -1,0 +1,37 @@
+{
+  "name": "omni-ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A pluggable, token-driven native HTML design system with ten standalone themes.",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "packages/themes/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @omni-ui/dashboard",
+    "build": "npm run build --workspace @omni-ui/dashboard && npm run build --workspace @omni-ui/single-theme-fixture",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:a11y": "npm run build --workspace @omni-ui/dashboard && node tests/accessibility.mjs",
+    "test:bundle": "npm run build --workspace @omni-ui/single-theme-fixture && node tests/bundle-isolation.mjs",
+    "check": "npm run typecheck && npm test && npm run build && npm run test:bundle && npm run test:a11y"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.5.2",
+    "happy-dom": "^21.0.4",
+    "playwright": "^1.55.1",
+    "rollup": "npm:@rollup/wasm-node@^4.68.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7",
+    "vitest": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

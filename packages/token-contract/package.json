@@ -1,0 +1,11 @@
+{
+  "name": "@omni-ui/token-contract",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./contract.json": "./src/contract.json",
+    "./manifest-schema.json": "./src/manifest-schema.json"
+  },
+  "license": "MIT"
+}

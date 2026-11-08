@@ -1,0 +1,13 @@
+{
+  "name": "@omni-ui/brand-rgb",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@omni-ui/token-contract": "1.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "license": "MIT"
+}

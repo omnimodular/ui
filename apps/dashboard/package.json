@@ -1,0 +1,26 @@
+{
+  "name": "@omni-ui/dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@omni-ui/components": "1.0.0",
+    "@omni-ui/brand-rgb": "1.0.0",
+    "@omni-ui/core": "1.0.0",
+    "@omni-ui/theme-botanical-earth": "1.0.0",
+    "@omni-ui/theme-cyberpunk-neon": "1.0.0",
+    "@omni-ui/theme-editorial-serif": "1.0.0",
+    "@omni-ui/theme-enterprise-slate": "1.0.0",
+    "@omni-ui/theme-high-contrast-clarity": "1.0.0",
+    "@omni-ui/theme-minimalist-nordic": "1.0.0",
+    "@omni-ui/theme-ocean-glass": "1.0.0",
+    "@omni-ui/theme-pastel-soft": "1.0.0",
+    "@omni-ui/theme-playful-geometric": "1.0.0",
+    "@omni-ui/theme-retro-terminal": "1.0.0"
+  }
+}

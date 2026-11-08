@@ -1,0 +1,13 @@
+{
+  "name": "@omni-ui/single-theme-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "vite build" },
+  "dependencies": {
+    "@omni-ui/components": "1.0.0",
+    "@omni-ui/brand-rgb": "1.0.0",
+    "@omni-ui/core": "1.0.0",
+    "@omni-ui/theme-minimalist-nordic": "1.0.0"
+  }
+}

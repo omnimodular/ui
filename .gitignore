@@ -1,0 +1,11 @@
+node_modules/
+dist/
+apps/*/dist/
+coverage/
+artifacts/
+playwright-report/
+test-results/
+*.local
+.DS_Store
+research_notes/
+reports/
