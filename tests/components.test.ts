@@ -39,7 +39,10 @@ describe('native HTML behavior controllers', () => {
     const table = new TableController(document.querySelector('table')!, {
       columns: [{ key: 'name', label: 'Name', sortable: true }, { key: 'status', label: 'Status', badge: true }], rows, onEdit,
     });
-    await user.click(document.querySelector('[data-sort-key="name"]')!);
+    const originalSort = document.querySelector('[data-sort-key="name"]')!;
+    await user.click(originalSort);
+    expect(document.activeElement).not.toBe(originalSort);
+    expect((document.activeElement as HTMLElement).dataset.sortKey).toBe('name');
     expect(document.querySelector('th')!.getAttribute('aria-sort')).toBe('ascending');
     expect(document.querySelector('tbody td')!.textContent).toBe('Alpha');
     await user.click(document.querySelector('[data-edit-index]')!);

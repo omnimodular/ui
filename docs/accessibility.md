@@ -10,7 +10,7 @@ The implementation targets WCAG 2.2 AA for the supplied dashboard and native HTM
 
 - All 103 required tokens in ten themes × two appearances, unique manifests, schema fields, and contract compatibility.
 - Registration, initialization, persistence, invalid stored values, unavailable storage, system-mode changes, cross-tab updates, listener cleanup, failed loads, incomplete tokens, and stale resolutions during rapid switching.
-- Dialog initial focus/restoration and Escape controller behavior, table sorting/edit/empty states, mobile navigation and cleanup.
+- Dialog initial focus/restoration and Escape controller behavior, table sorting with keyboard-focus preservation, edit/empty states, mobile navigation and cleanup.
 - Measured contrast for documented normal-text pairs at **4.5:1** and control boundaries/focus pairs at **3:1**. All tested values are opaque six-digit hex colors; the parser rejects untested color forms rather than guessing.
 - Brand anchor OKLCH coordinates, deterministic/immutable derivation, sRGB gamut mapping, quantized hue tolerances, preserved chroma personalities, and branded role contrast across every theme/mode.
 - Package boundaries, no theme-catalog imports in core/components, no theme-ID component selectors, and no hardcoded hex colors in component CSS.
@@ -19,7 +19,7 @@ The implementation targets WCAG 2.2 AA for the supplied dashboard and native HTM
 
 - **60 scans:** dashboard, component showcase, and native dialog in every one of the 20 theme/mode combinations.
 - WCAG 2 A/AA, WCAG 2.1 A/AA, and WCAG 2.2 AA axe tags.
-- Real browser checks for task validation, creation, editing, search, empty state, persistence, sorting, dialog Escape/focus restoration, mobile navigation, and reduced motion.
+- Real browser checks for task validation, creation, editing, search, empty state, persistence, session-only storage warnings, sorting, dialog Escape/focus restoration, mobile navigation, and reduced motion.
 - Desktop/mobile screenshots plus a forced-colors rendering for inspection.
 
 The test waits for theme transitions to settle before contrast scans. It caught and led to fixes for active-navigation hover contrast and the mobile disclosure panel. Token-pair tests alone had not covered that actual hovered selector interaction.

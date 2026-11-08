@@ -45,9 +45,9 @@ function loadTasks(): Task[] {
     return structuredClone(samples);
   }
 }
-function saveTasks(tasks: Task[]): void {
-  try { localStorage.setItem(TASKS_KEY, JSON.stringify(tasks)); }
-  catch { announce('Tasks changed for this session, but browser storage is unavailable.'); }
+function saveTasks(tasks: Task[]): boolean {
+  try { localStorage.setItem(TASKS_KEY, JSON.stringify(tasks)); return true; }
+  catch { return false; }
 }
 function announce(message: string): void { query('#toast').textContent = message; }
 
@@ -178,7 +178,9 @@ form.addEventListener('submit', (event) => {
     points, notify: query<HTMLInputElement>('#task-notify').checked,
   };
   tasks = existing ? tasks.map((item) => item.id === id ? task : item) : [task, ...tasks];
-  saveTasks(tasks); renderTasks(); dialog.close(); announce(existing ? `Updated ${task.id}.` : `Created ${task.id}.`);
+  const persisted = saveTasks(tasks);
+  renderTasks(); dialog.close();
+  announce(`${existing ? `Updated ${task.id}.` : `Created ${task.id}.`}${persisted ? '' : ' Browser storage is unavailable; changes are session-only.'}`);
 });
 
 query<HTMLFormElement>('#showcase-form').addEventListener('submit', (event) => {

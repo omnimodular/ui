@@ -10,5 +10,4 @@
     (preference.modePreference === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
   root.dataset.omTheme = preference.themeId;
   root.dataset.omMode = dark ? 'dark' : 'light';
-  root.style.colorScheme = dark ? 'dark' : 'light';
 }());

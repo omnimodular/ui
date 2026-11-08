@@ -71,13 +71,14 @@ Changing mode applies an already loaded appearance synchronously. System listene
 The controller owns one style element containing:
 
 ```css
-[data-om-theme-root][data-om-theme="minimalist-nordic"] {
+[data-om-theme-root="om-root-1"][data-om-theme="minimalist-nordic"] {
+  color-scheme: light;
   --color-page-bg: #f3f6f7;
   /* every other resolved semantic token */
 }
 ```
 
-It also sets `data-om-theme`, `data-om-mode`, and inline `color-scheme` on the caller's root. One controller has one active style and one root, preventing overlapping theme rules. Variables inherit into ordinary descendants. Applications needing independent themes can use separate controllers and nested roots.
+It also sets `data-om-theme` and `data-om-mode` on the caller's root. Each controller has a unique root ID and one active style, preventing overlap even when multiple controllers use the same theme ID with different modes. `color-scheme` lives in the generated rule so strict CSP does not require an inline style attribute; `styleNonce` authorizes that rule under nonce-based CSP. Variables inherit into ordinary descendants. Applications needing independent themes can use separate controllers and nested roots, supplying explicit unique `rootId` values when independently bundled controller copies share a document.
 
 ## Persistence and tabs
 

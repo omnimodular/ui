@@ -11,6 +11,7 @@ import {
 
 export const THEME_STORAGE_KEY = 'om.theme-preferences.v1';
 const ATTRIBUTE = 'data-om-theme';
+let nextControllerId = 0;
 
 export interface ThemeState {
   themeId: string;
@@ -32,6 +33,10 @@ export interface ThemeControllerOptions {
   storage?: StorageLike | null;
   window?: Window | null;
   document?: Document | null;
+  /** Authorizes the dynamic token style under a nonce-based CSP. */
+  styleNonce?: string;
+  /** Unique root identifier; provide one when independently bundled controllers share a document. */
+  rootId?: string;
 }
 
 function isPreference(value: unknown): value is { themeId: string; modePreference: ModePreference } {
@@ -58,6 +63,7 @@ export class ThemeController {
   private readonly doc: Document | null;
   private readonly style: HTMLStyleElement | null;
   private readonly initialThemeId: string;
+  private readonly rootId: string;
   private requestId = 0;
   private destroyed = false;
   private media: MediaQueryList | null = null;
@@ -67,9 +73,17 @@ export class ThemeController {
     if (!options.root) throw new Error('[core] A designated theme root is required.');
     this.root = options.root;
     this.initialThemeId = options.initialThemeId;
-    this.storage = options.storage === undefined ? this.safeStorage(options.window ?? null) : options.storage;
     this.win = options.window ?? (typeof window === 'undefined' ? null : window);
     this.doc = options.document ?? (typeof document === 'undefined' ? null : document);
+    this.storage = options.storage === undefined ? this.safeStorage(this.win) : options.storage;
+    this.rootId = options.rootId ?? `om-root-${++nextControllerId}`;
+    if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(this.rootId)) {
+      throw new Error(`[core] Invalid root ID "${this.rootId}". Use letters, numbers, underscores and hyphens.`);
+    }
+    const existingRoot = this.doc?.querySelector(`[data-om-theme-root="${this.rootId}"]`);
+    if (existingRoot && existingRoot !== this.root) {
+      throw new Error(`[core] Root ID "${this.rootId}" is already in use. Choose a unique rootId.`);
+    }
     for (const plugin of options.plugins) this.register(plugin);
     if (!this.plugins.has(options.initialThemeId)) {
       throw new Error(`[core] Initial theme "${options.initialThemeId}" is not registered.`);
@@ -81,10 +95,11 @@ export class ThemeController {
       status: 'idle',
       error: null,
     };
-    this.root.setAttribute('data-om-theme-root', '');
+    this.root.setAttribute('data-om-theme-root', this.rootId);
     this.style = this.doc?.createElement('style') ?? null;
     if (this.style) {
-      this.style.setAttribute('data-om-theme-tokens', '');
+      this.style.setAttribute('data-om-theme-tokens', this.rootId);
+      if (options.styleNonce) this.style.nonce = options.styleNonce;
       this.doc?.head.append(this.style);
     }
     this.onMediaChange = this.onMediaChange.bind(this);
@@ -197,11 +212,10 @@ export class ThemeController {
       .map(([name, value]) => `  --${name}: ${value};`)
       .join('\n');
     if (this.style) {
-      this.style.textContent = `[${ATTRIBUTE}-root][${ATTRIBUTE}="${themeId}"] {\n${declarations}\n}`;
+      this.style.textContent = `[${ATTRIBUTE}-root="${this.rootId}"][${ATTRIBUTE}="${themeId}"] {\n  color-scheme: ${this.state.resolvedMode};\n${declarations}\n}`;
     }
     this.root.setAttribute(ATTRIBUTE, themeId);
     this.root.setAttribute('data-om-mode', this.state.resolvedMode);
-    this.root.style.colorScheme = this.state.resolvedMode;
   }
 
   private persist(): void {

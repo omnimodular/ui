@@ -141,9 +141,15 @@ The brand compiler derives action, link, focus, info, and selected roles from me
 
 ## Early initialization and SSR
 
-Core imports do not read browser globals at module evaluation, so server-side module graphs can import them safely. Construct `ThemeController` only with a real DOM root. The dashboard loads `public/early-theme.js` before its module bundle to validate stored state, set early identity/mode attributes, and apply `color-scheme`; `main.ts` then awaits the persisted theme asset before revealing the app. This trades a brief loading message for no incorrect-theme flash.
+Core imports do not read browser globals at module evaluation, so server-side module graphs can import them safely. Construct `ThemeController` only with a real DOM root. The dashboard loads `public/early-theme.js` before its module bundle to validate stored state and set early identity/mode attributes. External `early-theme.css` applies the matching `color-scheme` without inline style attributes; `main.ts` then awaits the persisted theme asset before revealing the app. This trades a brief loading message for no incorrect-theme flash.
 
-The early script is external, so a CSP can allow it with a normal script source and does not need an inline-script nonce or hash. Production CSP must also permit the script/style chunks and any configured connection sources. No network fonts are used. Server-rendered applications should render the loading shell and run equivalent early code before their app HTML; the controller itself is not an SSR renderer.
+For a nonce-based CSP, pass the response's per-request nonce to `styleNonce`. The controller puts both token declarations and `color-scheme` in that authorized style element—no inline style attribute is required:
+
+```ts
+const themes = new ThemeController({ root, initialThemeId, plugins, styleNonce: responseCspNonce });
+```
+
+The early script and styles are external, so they work with normal script/style source policies and do not need inline-script hashes. Production CSP must permit the script/style chunks and any configured connection sources; do not hardcode a shared nonce in a static deployment. No network fonts are used. Server-rendered applications should render the loading shell and run equivalent early code before their app HTML; the controller itself is not an SSR renderer.
 
 ## Responsive and platform scope
 

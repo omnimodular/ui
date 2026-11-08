@@ -25,6 +25,8 @@ interface ThemeControllerOptions {
   storage?: StorageLike | null; // default: safe window.localStorage access
   window?: Window | null;       // injectable for tests/nonstandard environments
   document?: Document | null;
+  styleNonce?: string; // nonce for the dynamic token/color-scheme style under CSP
+  rootId?: string;     // unique root ID, useful across independently bundled controllers
 }
 ```
 
@@ -68,7 +70,7 @@ table.setRows(nextRows);
 table.destroy();
 ```
 
-It uses native table headers, sort buttons, `aria-sort`, safe DOM text insertion, status badges, and an empty-state row. Applications own filtering and persistence.
+It uses native table headers, sort buttons, `aria-sort`, safe DOM text insertion, status badges, and an empty-state row. Sorting restores focus to the replacement heading button. Applications own filtering and persistence.
 
 ### `createNavigation(navigation, toggle, onNavigate)`
 

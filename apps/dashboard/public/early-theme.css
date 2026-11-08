@@ -1,0 +1,3 @@
+/* External early color-scheme rules avoid inline-style CSP violations. */
+[data-om-mode="light"] { color-scheme: light; }
+[data-om-mode="dark"] { color-scheme: dark; }

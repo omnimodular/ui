@@ -81,6 +81,21 @@ try {
   await page.screenshot({ path: 'artifacts/dashboard-desktop.png', fullPage: true });
   functionalChecks.push('Table sorting and desktop render passed.');
 
+  await page.evaluate(() => {
+    window.__omOriginalSetItem = Storage.prototype.setItem;
+    Storage.prototype.setItem = function () { throw new DOMException('Storage denied for test', 'SecurityError'); };
+  });
+  await page.locator('#new-task').click();
+  await page.locator('#task-title').fill('Session-only task');
+  await page.locator('#task-owner').fill('Browser Test');
+  await page.locator('#save-task').click();
+  await page.waitForFunction(() => document.querySelector('#toast').textContent.includes('session-only'));
+  await page.evaluate(() => {
+    Storage.prototype.setItem = window.__omOriginalSetItem;
+    delete window.__omOriginalSetItem;
+  });
+  functionalChecks.push('Task storage failure preserves a session-only warning.');
+
   await page.locator('#new-task').click(); await page.keyboard.press('Escape');
   assert.equal(await page.evaluate(() => document.activeElement?.id), 'new-task');
   functionalChecks.push('Dialog Escape and focus restoration passed.');

@@ -34,6 +34,9 @@ export class TableController<T extends Record<string, unknown>> {
         if (this.sortKey === key) this.direction = this.direction === 'ascending' ? 'descending' : 'ascending';
         else { this.sortKey = key; this.direction = 'ascending'; }
         this.render();
+        const replacement = [...this.table.querySelectorAll<HTMLButtonElement>('[data-sort-key]')]
+          .find((button) => button.dataset.sortKey === key);
+        replacement?.focus();
       }
       const edit = target.closest<HTMLButtonElement>('[data-edit-index]');
       if (edit && this.options.onEdit) {
