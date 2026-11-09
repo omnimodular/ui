@@ -17,7 +17,7 @@ The implementation targets WCAG 2.2 AA for the supplied dashboard and native HTM
 
 `npm run test:a11y` runs Playwright with axe-core in Chrome/Chromium:
 
-- **60 scans:** dashboard, component showcase, and native dialog in every one of the 20 theme/mode combinations.
+- **100 scans:** dashboard, top navigation, folded navigation, component showcase, and native dialog in every one of the 20 theme/mode combinations.
 - WCAG 2 A/AA, WCAG 2.1 A/AA, and WCAG 2.2 AA axe tags.
 - Real browser checks for task validation, creation, editing, search, empty state, persistence, session-only storage warnings, sorting, dialog Escape/focus restoration, mobile navigation, and reduced motion.
 - Desktop/mobile screenshots plus a forced-colors rendering for inspection.

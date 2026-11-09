@@ -74,6 +74,20 @@ It uses native table headers, sort buttons, `aria-sort`, safe DOM text insertion
 
 ### `createNavigation(navigation, toggle, onNavigate)`
 
+An optional fourth `NavigationOptions` argument configures the application shell:
+
+```ts
+const cleanup = createNavigation(nav, mobileToggle, showView, {
+  shell, layout: 'sidebar', collapsible: true,
+  initialCollapsed: false, collapseToggle,
+  onCollapsedChange: collapsed => console.log(collapsed),
+});
+```
+
+Use `layout: 'top'` for horizontal navigation. Defaults are an expanded sidebar with folding disabled. Folding requires a separate native `collapseToggle` button. Persistence belongs to the integration; use the callback and `initialCollapsed` to restore a saved choice. Call cleanup before reinitializing with different options.
+
+The shell uses `.app-shell` with `.sidebar` and `.main-column` children. Put the single `nav` in `.sidebar`, wrap item text in `.navigation-label`, and mark decorative icons `aria-hidden="true"`. The mobile toggle uses `.mobile-toggle` and its `aria-controls` identifies the sidebar panel. At 760px and below both layouts use the disclosure panel with full labels; desktop folding is retained independently. Opening the mobile menu focuses the current page; Escape closes it and restores focus to the toggle. See the dashboard markup for a complete example.
+
 Wires buttons with `data-nav-id`, updates `aria-current="page"`, controls the panel named by the toggle's `aria-controls`, keeps `aria-expanded` synchronized, and returns an event-listener cleanup function.
 
 ## `@omni-ui/brand-rgb`

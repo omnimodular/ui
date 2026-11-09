@@ -34,7 +34,7 @@ npm run test:a11y     # real-browser axe scans and interaction checks
 npm run check         # all of the above
 ```
 
-`test:a11y` uses an installed Chrome/Chromium when found. Set `CHROME_PATH=/path/to/chrome`, or install Playwright's browser with `npx playwright install chromium`. Reports and screenshots are written to `artifacts/` (not committed). The browser script runs 60 axe scans: dashboard, component showcase, and dialog in each of 20 theme/mode combinations. Automated scans do not prove complete WCAG conformance.
+`test:a11y` uses an installed Chrome/Chromium when found. Set `CHROME_PATH=/path/to/chrome`, or install Playwright's browser with `npx playwright install chromium`. Reports and screenshots are written to `artifacts/` (not committed). The browser script runs 100 axe scans: dashboard, top navigation, folded navigation, component showcase, and dialog in each of 20 theme/mode combinations. Automated scans do not prove complete WCAG conformance.
 
 ## Repository map
 
@@ -90,6 +90,8 @@ dialogs.open();
 ```
 
 See [public API documentation](docs/api.md) for table and navigation contracts.
+
+The template supports a left sidebar or horizontal top menu, with optional sidebar folding into an icon rail. Try the gallery's Menu layout and Allow sidebar folding controls. Integrations configure the fourth argument to `createNavigation`; navigation preferences are not automatically persisted.
 
 ## Single-theme application
 

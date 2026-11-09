@@ -95,7 +95,22 @@ function showView(id: string): void {
   const title = query<HTMLElement>(`#${id}-title`);
   document.title = `Omni UI · ${title.textContent ?? 'Workspace'}`;
 }
-const destroyNavigation = createNavigation(query('#main-navigation'), query<HTMLButtonElement>('#navigation-toggle'), showView);
+let destroyNavigation = () => {};
+let sidebarCollapsed = false;
+function configureNavigation(): void {
+  destroyNavigation();
+  const layout = query<HTMLSelectElement>('#navigation-layout').value === 'top' ? 'top' : 'sidebar';
+  const folding = query<HTMLInputElement>('#navigation-folding');
+  folding.disabled = layout === 'top';
+  destroyNavigation = createNavigation(query('#main-navigation'), query<HTMLButtonElement>('#navigation-toggle'), showView, {
+    shell: query('#app'), layout, collapsible: folding.checked,
+    initialCollapsed: sidebarCollapsed, collapseToggle: query<HTMLButtonElement>('#sidebar-collapse'),
+    onCollapsedChange: value => { sidebarCollapsed = value; },
+  });
+}
+query('#navigation-layout').addEventListener('change', configureNavigation);
+query('#navigation-folding').addEventListener('change', configureNavigation);
+configureNavigation();
 
 let tasks = loadTasks();
 let visibleTasks = [...tasks];
@@ -202,6 +217,7 @@ query<HTMLButtonElement>('#loading-demo').addEventListener('click', (event) => {
 });
 
 const examples: Record<string, string> = {
+  navigation: `import { createNavigation } from '@omni-ui/components';\n\nconst cleanup = createNavigation(nav, mobileToggle, showView, {\n  shell,\n  layout: 'sidebar', // or 'top'\n  collapsible: true,\n  collapseToggle,\n  initialCollapsed: false,\n});\n\n// Call cleanup() before reconfiguring or unmounting.`,
   register: `import { ThemeController } from '@omni-ui/core';\nimport nordic from '@omni-ui/theme-minimalist-nordic';\n\nconst themes = new ThemeController({\n  root: document.body,\n  initialThemeId: 'minimalist-nordic',\n  plugins: [nordic],\n});\n\nawait themes.initialize();`,
   theme: `// Register other standalone plugins in plugins: [...]\nawait themes.setTheme('botanical-earth');\n\n// The last valid theme stays active if loading fails.\nconst { themeId, status, error } = themes.getState();`,
   mode: `themes.setModePreference('light');\nthemes.setModePreference('dark');\nthemes.setModePreference('system');\n\nconst { modePreference, resolvedMode } = themes.getState();`,

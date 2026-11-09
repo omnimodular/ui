@@ -12,14 +12,15 @@
   <a class="skip-link" href="#main-content">Skip to content</a>
   <p id="boot-status" role="status">Loading workspace…</p>
   <div class="app-shell" id="app" hidden>
-    <aside class="sidebar" id="sidebar" aria-label="Workspace sidebar">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">O</span> Omni workspace</div>
+    <aside class="sidebar" id="sidebar" aria-label="Workspace navigation">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">O</span> <span class="navigation-label">Omni workspace</span></div>
+      <button type="button" class="secondary icon-button" id="sidebar-collapse" aria-controls="main-navigation" hidden>«</button>
       <p class="sidebar-section">Manage</p>
       <nav aria-label="Main navigation" id="main-navigation">
         <ul>
-          <li><button data-nav-id="dashboard" aria-current="page"><span aria-hidden="true">▦</span> Dashboard</button></li>
-          <li><button data-nav-id="components"><span aria-hidden="true">◈</span> Components</button></li>
-          <li><button data-nav-id="developers"><span aria-hidden="true">⌘</span> Developers</button></li>
+          <li><button data-nav-id="dashboard" aria-current="page"><span aria-hidden="true">▦</span> <span class="navigation-label">Dashboard</span></button></li>
+          <li><button data-nav-id="components"><span aria-hidden="true">◈</span> <span class="navigation-label">Components</span></button></li>
+          <li><button data-nav-id="developers"><span aria-hidden="true">⌘</span> <span class="navigation-label">Developers</span></button></li>
         </ul>
       </nav>
       <div class="workspace"><strong>Atlas product team</strong><span>Local task data</span></div>
@@ -28,6 +29,8 @@
       <header class="topbar">
         <button class="secondary icon-button mobile-toggle" id="navigation-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar">☰</button>
         <div class="theme-controls" aria-label="Appearance controls">
+          <div class="field"><label for="navigation-layout">Menu layout</label><select id="navigation-layout"><option value="sidebar">Left sidebar</option><option value="top">Top menu</option></select></div>
+          <label class="checkbox-field"><input id="navigation-folding" type="checkbox" /> Allow sidebar folding</label>
           <div class="field">
             <label for="theme-select">Visual identity</label>
             <select id="theme-select"></select>
@@ -92,6 +95,7 @@
           <div class="page-heading"><div><p class="eyebrow">Public API</p><h1 id="developers-title">Use it anywhere</h1><p>Plain TypeScript, native HTML and semantic CSS custom properties.</p></div></div>
           <div class="notice">Choose an example, inspect the real API, then copy it into your project. The controls above run the same registration and mode APIs.</div>
           <div class="code-tabs" role="tablist" aria-label="Code examples">
+            <button class="secondary" role="tab" id="tab-navigation" aria-controls="code-panel" aria-selected="false" data-example="navigation">Navigation</button>
             <button class="secondary" role="tab" id="tab-register" aria-controls="code-panel" aria-selected="true" data-example="register">Register</button>
             <button class="secondary" role="tab" id="tab-theme" aria-controls="code-panel" aria-selected="false" data-example="theme">Identity</button>
             <button class="secondary" role="tab" id="tab-mode" aria-controls="code-panel" aria-selected="false" data-example="mode">Mode</button>

@@ -3,6 +3,61 @@ import userEvent from '@testing-library/user-event';
 import { DialogController, TableController, createNavigation } from '@omni-ui/components';
 
 describe('native HTML behavior controllers', () => {
+  it('preserves desktop folding through mobile disclosure and removes resize listeners', () => {
+    const media = Object.assign(new EventTarget(), { matches: false });
+    vi.spyOn(window, 'matchMedia').mockReturnValue(media as MediaQueryList);
+    document.body.innerHTML = '<div id="shell"><button id="mobile" aria-controls="panel"></button><aside id="panel"><button id="fold"></button><nav><button data-nav-id="one">One</button></nav></aside></div>';
+    const shell = document.querySelector<HTMLElement>('#shell')!;
+    const mobile = document.querySelector<HTMLButtonElement>('#mobile')!;
+    const fold = document.querySelector<HTMLButtonElement>('#fold')!;
+    const cleanup = createNavigation(document.querySelector('nav')!, mobile, vi.fn(), { shell, collapsible: true, initialCollapsed: true, collapseToggle: fold });
+    expect(shell.dataset.omCollapsed).toBe('true');
+    media.matches = true; media.dispatchEvent(new Event('change'));
+    expect(shell.dataset.omCollapsed).toBe('false');
+    expect(fold.hidden).toBe(true);
+    mobile.click();
+    const item = document.querySelector<HTMLButtonElement>('[data-nav-id]')!;
+    expect(document.activeElement).toBe(item);
+    item.focus(); item.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(document.activeElement).toBe(mobile);
+    expect(mobile.getAttribute('aria-expanded')).toBe('false');
+    media.matches = false; media.dispatchEvent(new Event('change'));
+    expect(shell.dataset.omCollapsed).toBe('true');
+    expect(document.activeElement).toBe(item);
+    cleanup();
+    media.matches = true; media.dispatchEvent(new Event('change'));
+    expect(shell.dataset.omCollapsed).toBe('true');
+  });
+  it('focuses the current page rather than the first item when opening and resizing', () => {
+    const media = Object.assign(new EventTarget(), { matches: true });
+    vi.spyOn(window, 'matchMedia').mockReturnValue(media as MediaQueryList);
+    document.body.innerHTML = '<div id="shell"><button id="mobile" aria-controls="panel"></button><aside id="panel"><nav><button data-nav-id="one">One</button><button data-nav-id="two" aria-current="page">Two</button></nav></aside></div>';
+    const mobile = document.querySelector<HTMLButtonElement>('#mobile')!;
+    const current = document.querySelector('[aria-current]')!;
+    const cleanup = createNavigation(document.querySelector('nav')!, mobile, vi.fn(), { shell: document.querySelector('#shell')! });
+    mobile.click();
+    expect(document.activeElement).toBe(current);
+    mobile.focus();
+    media.matches = false; media.dispatchEvent(new Event('change'));
+    expect(document.activeElement).toBe(current);
+    cleanup();
+  });
+  it('folds only when enabled and reports changes without storing preferences', async () => {
+    document.body.innerHTML = '<div id="shell"><button id="mobile" aria-controls="panel"></button><aside id="panel"><button id="fold"></button><nav><button data-nav-id="one">One</button></nav></aside></div>';
+    const shell = document.querySelector<HTMLElement>('#shell')!;
+    const fold = document.querySelector<HTMLButtonElement>('#fold')!;
+    const changed = vi.fn();
+    const cleanup = createNavigation(document.querySelector('nav')!, document.querySelector<HTMLButtonElement>('#mobile')!, vi.fn(), { shell, collapsible: true, collapseToggle: fold, onCollapsedChange: changed });
+    fold.click();
+    expect(changed).toHaveBeenCalledWith(true);
+    expect(fold.getAttribute('aria-expanded')).toBe('false');
+    cleanup(); fold.click();
+    expect(changed).toHaveBeenCalledTimes(1);
+    const destroy = createNavigation(document.querySelector('nav')!, document.querySelector<HTMLButtonElement>('#mobile')!, vi.fn(), { shell, layout: 'top', collapsible: true, collapseToggle: fold });
+    expect(fold.hidden).toBe(true);
+    expect(shell.dataset.omNavigation).toBe('top');
+    destroy();
+  });
   it('opens a named dialog, focuses its initial control, closes and restores focus', async () => {
     const user = userEvent.setup();
     document.body.innerHTML = '<button id="trigger">Open</button><dialog aria-label="Example"><input autofocus /><button id="close">Close</button></dialog>';

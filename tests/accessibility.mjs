@@ -40,6 +40,17 @@ try {
       await page.locator(`input[name="mode"][value="${mode}"]`).check();
       await page.waitForFunction((value) => document.body.dataset.omMode === value, mode);
       await axe(`${themeId}/${mode}/dashboard`);
+      await page.locator('#navigation-layout').selectOption('top');
+      await axe(`${themeId}/${mode}/top-navigation`);
+      if (themeId === 'minimalist-nordic' && mode === 'light') await page.screenshot({ path: 'artifacts/navigation-top.png', fullPage: true });
+      await page.locator('#navigation-layout').selectOption('sidebar');
+      await page.locator('#navigation-folding').check();
+      await page.locator('#sidebar-collapse').click();
+      assert.equal(await page.locator('#sidebar-collapse').getAttribute('aria-expanded'), 'false');
+      await axe(`${themeId}/${mode}/folded-navigation`);
+      if (themeId === 'minimalist-nordic' && mode === 'light') await page.screenshot({ path: 'artifacts/navigation-folded.png', fullPage: true });
+      await page.locator('#sidebar-collapse').click();
+      await page.locator('#navigation-folding').uncheck();
       await page.locator('[data-nav-id="components"]').click();
       await axe(`${themeId}/${mode}/components`);
       await page.locator('#dialog-demo').click();
@@ -100,6 +111,18 @@ try {
   assert.equal(await page.evaluate(() => document.activeElement?.id), 'new-task');
   functionalChecks.push('Dialog Escape and focus restoration passed.');
   await page.setViewportSize({ width: 375, height: 812 });
+  for (const layout of ['top', 'sidebar']) {
+    await page.locator('#navigation-layout').selectOption(layout);
+    for (const width of [320, 375, 760, 761, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `${layout} overflow at ${width}px`);
+    }
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.locator('#navigation-toggle').click();
+    assert.equal(await page.evaluate(() => document.activeElement.dataset.navId), 'dashboard');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'navigation-toggle');
+  }
   await page.locator('#navigation-toggle').click();
   assert.equal(await page.locator('#navigation-toggle').getAttribute('aria-expanded'), 'true');
   await page.locator('[data-nav-id="components"]').click();
@@ -113,7 +136,7 @@ try {
   await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'no-preference' });
   await page.screenshot({ path: 'artifacts/components-forced-colors.png', fullPage: true });
   functionalChecks.push('Forced-colors mode rendered for manual inspection (not an automated conformance claim).');
-  console.log(`Accessibility checks passed: ${results.length} axe scans across 20 theme/mode combinations.`);
+  console.log(`Accessibility checks passed: ${results.length} axe scans across ${themeIds.length * 2} theme/mode combinations.`);
   for (const check of functionalChecks) console.log(`PASS ${check}`);
 } finally {
   await mkdir('artifacts', { recursive: true });
