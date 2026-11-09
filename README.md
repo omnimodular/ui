@@ -2,6 +2,8 @@
 
 A framework-free design system built from **native HTML, scoped CSS custom properties, and small TypeScript behavior controllers**. Ten independently importable themes share one component implementation.
 
+**[Open the live demo](https://omnimodular.github.io/ui/)** — explore all ten themes, top navigation, and the optional collapsible sidebar.
+
 No React, Svelte, Vue, Lit, Tailwind, HTMX, runtime CSS-in-JS, web fonts, backend, or authentication is required.
 
 ## Design intent and authorship
@@ -22,6 +24,19 @@ npm run dev
 Open the URL printed by Vite. The dashboard includes local project tasks, search/filter/sort, create/edit validation, native modal dialogs, a component showcase, interactive API examples, all ten themes, and Light/Dark/System controls.
 
 Tasks and appearance preferences persist in browser local storage. If storage is unavailable or invalid, the demo remains usable and reports the problem; task changes then last only for the current session. Use **Clear site data** to restore the original eight tasks.
+
+## GitHub Pages deployment
+
+The CI workflow publishes the dashboard to [GitHub Pages](https://omnimodular.github.io/ui/) after verification succeeds on `master`. Pull requests run checks without deploying. The workflow can also be started manually on `master`.
+
+Pages must use **GitHub Actions** as its publishing source. The deployment builds only `apps/dashboard/dist` with Vite's `/ui/` base path, verifies that output in a browser, and uploads it as a Pages artifact. No Node server runs on Pages; tasks and preferences remain in each visitor's browser. Normal local builds keep the default `/` base path.
+
+To reproduce the deployment build and smoke test locally:
+
+```sh
+npm run build --workspace @omni-ui/dashboard -- --base /ui/
+node tests/pages-smoke.mjs
+```
 
 ## Verify
 
