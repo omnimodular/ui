@@ -43,9 +43,14 @@ jobs:
           cache: npm
       - run: npm ci
       - uses: actions/configure-pages@v5
-      - run: npm run build --workspace @omni-ui/dashboard -- --base /ui/
+        id: pages
+      - run: npm run build --workspace @omni-ui/dashboard -- --base "$PAGES_BASE_PATH/"
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
       - run: npx playwright install --with-deps chromium
       - run: node tests/pages-smoke.mjs
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
       - uses: actions/upload-pages-artifact@v4
         with:
           path: apps/dashboard/dist

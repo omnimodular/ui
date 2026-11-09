@@ -6,6 +6,7 @@ import { extname, resolve, sep } from 'node:path';
 import { chromium } from 'playwright';
 
 const root = resolve('apps/dashboard/dist');
+const basePath = `${(process.env.PAGES_BASE_PATH ?? '').replace(/\/$/, '')}/`;
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css' };
 let server;
 let browser;
@@ -14,8 +15,8 @@ try {
   if (!url) {
     server = createServer(async (request, response) => {
       const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-      const file = resolve(root, pathname.slice('/ui/'.length) || 'index.html');
-      if (!pathname.startsWith('/ui/') || !file.startsWith(root + sep)) {
+      const file = resolve(root, pathname.slice(basePath.length) || 'index.html');
+      if (!pathname.startsWith(basePath) || !file.startsWith(root + sep)) {
         response.writeHead(404).end(); return;
       }
       try {
@@ -24,7 +25,7 @@ try {
       } catch { response.writeHead(404).end(); }
     });
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-    url = `http://127.0.0.1:${server.address().port}/ui/`;
+    url = `http://127.0.0.1:${server.address().port}${basePath}`;
   }
   const executablePath = process.env.CHROME_PATH ?? ['/root/.local/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/google-chrome'].find(existsSync);
   browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}), args: ['--no-sandbox'] });

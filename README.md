@@ -2,7 +2,7 @@
 
 A framework-free design system built from **native HTML, scoped CSS custom properties, and small TypeScript behavior controllers**. Ten independently importable themes share one component implementation.
 
-**[Open the live demo](https://omnimodular.github.io/ui/)** — explore all ten themes, top navigation, and the optional collapsible sidebar.
+**[Open the live demo](https://ui.omnimodular.com/)** — explore all ten themes, top navigation, and the optional collapsible sidebar.
 
 No React, Svelte, Vue, Lit, Tailwind, HTMX, runtime CSS-in-JS, web fonts, backend, or authentication is required.
 
@@ -27,14 +27,14 @@ Tasks and appearance preferences persist in browser local storage. If storage is
 
 ## GitHub Pages deployment
 
-The CI workflow publishes the dashboard to [GitHub Pages](https://omnimodular.github.io/ui/) after verification succeeds on `master`. Pull requests run checks without deploying. The workflow can also be started manually on `master`.
+The CI workflow publishes the dashboard to [ui.omnimodular.com](https://ui.omnimodular.com/) on GitHub Pages after verification succeeds on `master`. Pull requests run checks without deploying. The workflow can also be started manually on `master`.
 
-Pages must use **GitHub Actions** as its publishing source. The deployment builds only `apps/dashboard/dist` with Vite's `/ui/` base path, verifies that output in a browser, and uploads it as a Pages artifact. No Node server runs on Pages; tasks and preferences remain in each visitor's browser. Normal local builds keep the default `/` base path.
+Pages must use **GitHub Actions** as its publishing source and `ui.omnimodular.com` as its custom domain. DNS has a `ui` CNAME pointing to `omnimodular.github.io`. The deployment builds only `apps/dashboard/dist`, verifies that output in a browser, and uploads it as a Pages artifact. Its base path comes from GitHub's Pages configuration: `/` for the custom domain, or `/ui/` for the default project URL. No Node server runs on Pages; tasks and preferences remain in each visitor's browser. Normal local builds keep the default `/` base path.
 
 To reproduce the deployment build and smoke test locally:
 
 ```sh
-npm run build --workspace @omni-ui/dashboard -- --base /ui/
+npm run build --workspace @omni-ui/dashboard
 node tests/pages-smoke.mjs
 ```
 
